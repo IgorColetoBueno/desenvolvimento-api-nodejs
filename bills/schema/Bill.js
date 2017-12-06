@@ -11,9 +11,8 @@ const Bill = mongoose.Schema({
     },
     date: {
         type: Date,
-        default: Date.now,
-        required: true
+        default: Date.now
     }
 });
 
-export default Bill
+export default mongoose.model('Bill',Bill);
