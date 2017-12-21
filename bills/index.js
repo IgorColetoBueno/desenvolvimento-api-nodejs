@@ -8,7 +8,7 @@ const router = express.Router();
 
 //localhost:300/bills GET
 router.get('/',list);
-//localhost:300/bills GET
+//localhost:300/bills/:id GET
 router.get('/:id',listById);
 //localhost:3000/bills POST
 router.post('/',create);
