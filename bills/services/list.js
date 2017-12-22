@@ -3,6 +3,7 @@ import Bill from './../schema/Bill';
 export default (req, res) => {
     Bill
         .find({})
+        .populate('category')
         .then((bills) => {
             if (!bills || !bills.length) {
                 return res.status(404)

@@ -14,8 +14,8 @@
 			$.post('http://localhost:3000/bills/', {
 				'title': title,
 				'price': price
-			}, function () {
-				let tmpl = '<tr><td>' + title + '</td><td>' + price + '</td></tr>';
+			}, function (result) {
+				let tmpl = '<tr><td>' + title + '</td><td>' + price + '</td><td>' + '<button id="btn_delete" onClick="removeData(this)" class="btn btn-danger" data-id="' + result.data._id + '">Delete</button>' + '</td></tr>';
 				$('#table tbody').append(tmpl);
 				$('input[name="title"]').val('');
 				$('input[name="price"]').val('');
@@ -30,28 +30,47 @@
 				$('#table tbody').empty();
 				result.data.forEach(function (bill) {
 					let tmpl = '<tr><td>' + bill.title + '</td><td>' + bill.price +
-						'</td>' + '<td>' + '<button id="btn_delete" class="btn btn-danger" data-id="' + bill._id + '">Delete</button>' + '</td></tr>';
+						'</td>' + '<td>' + '<button id="btn_delete" onClick="removeData(this)" class="btn btn-danger" data-id="' + bill._id + '">Delete</button>' + '</td></tr>';
 					$('#table tbody').append(tmpl);
 				});
 			});
 		}
-		//DELETE Bill
-		const removeData = function () {
-			let id = $(this).data(id);
 
-			$.ajax({
-				url: 'http://localhost:3000/bills/' + id,
-				type: 'DELETE',
-				sucess: function (result) {
-					//$('#list_table tbody tr td #btn_delete[data-id="'+id+']').remove();
-						listData()
-				}
-			})
-		}
-		//Declararations
-		listData();
+
 		$('#btn_create').click(createData);
-		$('#btn_delete').click(removeData);
 	});
 
+
 })(jQuery);
+
+//GET Bill
+function listData() {
+	$.get('http://localhost:3000/bills/', function (result) {
+		console.log(result);
+		if(result.data.lenght == 0){
+			$('#table tbody').empty();
+		}
+		$('#table tbody').empty();
+		result.data.forEach(function (bill) {
+			let tmpl = '<tr><td>' + bill.title + '</td><td>' + bill.price +
+				'</td>' + '<td>' + '<button id="btn_delete" onClick="removeData(this)" class="btn btn-danger" data-id="' + bill._id + '">Delete</button>' + '</td></tr>';
+			$('#table tbody').append(tmpl);
+		});
+	});
+}
+
+//DELETE Bill
+function removeData(e) {
+	let id = $(e).attr('data-id');
+	$.ajax({
+		type: 'DELETE',
+		url: 'http://localhost:3000/bills/' + id,
+		sucess: function () {
+			listData();
+		}
+	});
+	listData();
+}
+
+//Declararations
+listData();
